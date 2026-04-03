@@ -1,36 +1,46 @@
 // =============================================
-// API.JS
-// Todas las funciones que hablan con Google Sheets.
-// Separo GET (traer datos) y POST (enviar datos).
-// Uso async/await en todas para manejar la espera
-// de la respuesta del servidor.
+// API.JS - Versión Corregida para MVP 2
 // =============================================
 
+// ---- CONFIGURACIÓN ----
+// Asegúrate de que esta URL sea la de tu última "Nueva implementación" en Apps Script
+// const API_URL = "https://script.google.com/macros/s/TU_ID_DE_DESPLIEGUE/exec";
 
 // ---- GET: CARGAR DATOS ----
 
-// Funcion generica que trae todos los datos de una hoja
-// resource es el nombre de la hoja: "productos", "ventas", etc.
+// Función genérica que trae todos los datos de una hoja
 async function obtenerDatos(resource) {
-    var respuesta = await fetch(API_URL + "?resource=" + resource);
-    if (!respuesta.ok) {
-        throw new Error("Error al conectar con el servidor: " + respuesta.status);
+    try {
+        const respuesta = await fetch(API_URL + "?resource=" + resource, {
+            method: "GET",
+            mode: "cors",
+            redirect: "follow" // CRÍTICO: Permite seguir el redireccionamiento de Google
+        });
+
+        if (!respuesta.ok) {
+            throw new Error("Error al conectar con el servidor: " + respuesta.status);
+        }
+
+        const datos = await respuesta.json();
+        
+        if (!datos.success) {
+            throw new Error("Error del servidor: " + datos.message);
+        }
+
+        return datos.data;
+    } catch (error) {
+        console.error("Error en obtenerDatos (" + resource + "):", error);
+        throw error;
     }
-    var datos = await respuesta.json();
-    if (!datos.success) {
-        throw new Error("Error del servidor: " + datos.message);
-    }
-    return datos.data;
 }
 
-// Carga los productos desde Google Sheets y los guarda en listaProductos
+// Carga los productos desde Google Sheets
 async function cargarProductosDesdeAPI() {
     try {
-        var datos = await obtenerDatos("productos");
+        const datos = await obtenerDatos("productos");
         listaProductos = [];
         for (var i = 0; i < datos.length; i++) {
             var fila = datos[i];
-            // Convierto los tipos correctamente porque Sheets devuelve todo como texto
             listaProductos.push({
                 id: String(fila.id),
                 nombre: String(fila.nombre),
@@ -38,7 +48,7 @@ async function cargarProductosDesdeAPI() {
                 precio: Number(fila.precio),
                 costo: Number(fila.costo),
                 stock: fila.stock !== "" ? Number(fila.stock) : null,
-                controlInventario: String(fila.seguimientoInventario) == "si",
+                controlInventario: String(fila.seguimientoInventario).toLowerCase() === "si",
                 codigo: String(fila.id)
             });
         }
@@ -50,11 +60,10 @@ async function cargarProductosDesdeAPI() {
 // Carga las ventas desde Google Sheets
 async function cargarVentasDesdeAPI() {
     try {
-        var datos = await obtenerDatos("ventas");
+        const datos = await obtenerDatos("ventas");
         listaVentas = [];
         for (var i = 0; i < datos.length; i++) {
             var fila = datos[i];
-            // itemsJson viene como texto, lo convierto a objeto
             var items = [];
             try {
                 items = JSON.parse(fila.itemsJson);
@@ -78,7 +87,7 @@ async function cargarVentasDesdeAPI() {
 // Carga clientes desde Google Sheets
 async function cargarClientesDesdeAPI() {
     try {
-        var datos = await obtenerDatos("clientes");
+        const datos = await obtenerDatos("clientes");
         listaClientes = [];
         for (var i = 0; i < datos.length; i++) {
             var fila = datos[i];
@@ -97,7 +106,7 @@ async function cargarClientesDesdeAPI() {
 // Carga proveedores desde Google Sheets
 async function cargarProveedoresDesdeAPI() {
     try {
-        var datos = await obtenerDatos("proveedores");
+        const datos = await obtenerDatos("proveedores");
         listaProveedores = [];
         for (var i = 0; i < datos.length; i++) {
             var fila = datos[i];
@@ -116,7 +125,7 @@ async function cargarProveedoresDesdeAPI() {
 // Carga categorias desde Google Sheets
 async function cargarCategoriasDesdeAPI() {
     try {
-        var datos = await obtenerDatos("categorias");
+        const datos = await obtenerDatos("categorias");
         listaCategorias = [];
         for (var i = 0; i < datos.length; i++) {
             var fila = datos[i];
@@ -133,88 +142,25 @@ async function cargarCategoriasDesdeAPI() {
 
 // ---- POST: ENVIAR DATOS ----
 
-// Funcion generica para enviar un objeto a una hoja de Sheets
+// Función genérica para enviar un objeto a una hoja de Sheets
 async function enviarDatos(resource, objeto) {
-    var respuesta = await fetch(API_URL + "?resource=" + resource, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(objeto)
-    });
-    if (!respuesta.ok) {
-        throw new Error("Error al enviar datos: " + respuesta.status);
-    }
-    var resultado = await respuesta.json();
-    if (!resultado.success) {
-        throw new Error("Error del servidor: " + resultado.message);
-    }
-    return resultado;
-}
+    try {
+        const respuesta = await fetch(API_URL + "?resource=" + resource, {
+            method: "POST",
+            mode: "cors",
+            redirect: "follow", // CRÍTICO
+            headers: { 
+                // Usamos text/plain para evitar problemas de preflight/CORS complejos en Apps Script
+                "Content-Type": "text/plain;charset=utf-8" 
+            },
+            body: JSON.stringify(objeto)
+        });
 
-// Guarda un producto nuevo en Google Sheets
-async function guardarProductoEnAPI(producto) {
-    return await enviarDatos("productos", {
-        id: producto.id,
-        nombre: producto.nombre,
-        categoria: producto.categoria,
-        precio: producto.precio,
-        costo: producto.costo,
-        stock: producto.stock !== null ? producto.stock : "",
-        seguimientoInventario: producto.controlInventario ? "si" : "no"
-    });
-}
+        if (!respuesta.ok) {
+            throw new Error("Error al enviar datos: " + respuesta.status);
+        }
 
-// Guarda una venta cerrada en Google Sheets
-async function guardarVentaEnAPI(venta) {
-    // Busco el cliente si existe
-    var clienteId = "";
-    if (venta.cliente) {
-        clienteId = venta.cliente;
-    }
-    return await enviarDatos("ventas", {
-        id: venta.id,
-        fecha: venta.cerradoEn,
-        clienteId: clienteId,
-        metodoPago: venta.pago.metodo,
-        total: venta.total,
-        itemsJson: JSON.stringify(venta.items)
-    });
-}
-
-// Guarda una compra en Google Sheets
-async function guardarCompraEnAPI(compra) {
-    return await enviarDatos("compras", {
-        id: compra.id,
-        fecha: compra.fecha,
-        proveedorId: compra.proveedorId,
-        total: compra.total,
-        itemsJson: JSON.stringify(compra.items)
-    });
-}
-
-// Guarda un cliente en Google Sheets
-async function guardarClienteEnAPI(cliente) {
-    return await enviarDatos("clientes", {
-        id: cliente.id,
-        nombre: cliente.nombre,
-        telefono: cliente.telefono,
-        correo: cliente.correo
-    });
-}
-
-// Guarda un proveedor en Google Sheets
-async function guardarProveedorEnAPI(proveedor) {
-    return await enviarDatos("proveedores", {
-        id: proveedor.id,
-        nombre: proveedor.nombre,
-        telefono: proveedor.telefono,
-        correo: proveedor.correo
-    });
-}
-
-// Guarda una categoria en Google Sheets
-async function guardarCategoriaEnAPI(categoria) {
-    return await enviarDatos("categorias", {
-        id: categoria.id,
-        nombre: categoria.nombre
-    });
-}
+        const resultado = await respuesta.json();
+        
+        if (!resultado.success) {
+            throw new Error("Error del servidor
