@@ -261,17 +261,19 @@ function previsualizarImagen() {
     // Muestra una miniatura de la imagen mientras el usuario escribe la URL
 // Muestra una miniatura de la imagen mientras el usuario escribe la URL
 function previsualizarImagen() {
-    var url = document.getElementById("campo-imagen").value.trim();
+    var urlInput = document.getElementById("campo-imagen");
     var preview = document.getElementById("preview-imagen");
-    if (!preview) return; // Seguridad por si no existe el div de preview
+    
+    if (!urlInput || !preview) return; 
+
+    var url = urlInput.value.trim();
 
     if (url == "") {
-        preview.innerHTML = "";
+        preview.innerHTML = '<span style="color: #9a9087; font-size: 12px;">Vista previa de imagen</span>';
         return;
     }
-    
-    // CORRECCIÓN: Usamos comillas dobles en el onerror para no romper el string
-    preview.innerHTML =
-        '<img src="' + url + '" style="height:80px;border-radius:6px;border:1px solid #e0d8cc;object-fit:cover;" ' +
-        'onerror="this.parentElement.innerHTML=\'<span style=\' + \'color:#c0392b;font-size:12px\'>URL de imagen no válida</span>\'">';
+
+    // CORRECCIÓN: Usamos comillas dobles para el style y evitamos el choque en onerror
+    preview.innerHTML = '<img src="' + url + '" style="height:80px; border-radius:6px; border:1px solid #e0d8cc; object-fit:cover;" ' +
+        'onerror="this.parentElement.innerHTML=\'<span style=\\\'color:#c0392b;font-size:12px\\\'>URL de imagen no válida</span>\'">';
 }
