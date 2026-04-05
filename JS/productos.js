@@ -28,9 +28,14 @@ function cargarTablaProductos() {
             ? prod.stock + " und."
             : '<span style="color:#9a9087;font-size:11px">Sin seguimiento</span>';
 
+        // Miniatura si el producto tiene imagen
+        var imgHtml = prod.imagen && prod.imagen != ""
+            ? '<img src="' + prod.imagen + '" class="img-producto-tabla" onerror="this.style.display=\'none\'">'
+            : '<div class="img-producto-placeholder">📦</div>';
+
         html +=
             '<tr>' +
-                '<td class="texto-mono">' + prod.id + '</td>' +
+                '<td>' + imgHtml + '</td>' +
                 '<td style="font-weight:500">' + prod.nombre + '</td>' +
                 '<td style="color:#9a9087">' + prod.categoria + '</td>' +
                 '<td class="texto-mono">' + formatearPrecio(prod.precio) + '</td>' +
@@ -71,6 +76,7 @@ function abrirFormularioProducto(idONuevo) {
         document.getElementById("campo-costo").value = "";
         document.getElementById("campo-inventario").value = "si";
         document.getElementById("campo-stock").value = "0";
+        document.getElementById("campo-imagen").value = "";
         document.getElementById("grupo-stock").classList.remove("oculto");
     } else {
         idProductoEditando = idONuevo;
@@ -92,6 +98,7 @@ function abrirFormularioProducto(idONuevo) {
         document.getElementById("campo-costo").value = producto.costo;
         document.getElementById("campo-inventario").value = producto.controlInventario ? "si" : "no";
         document.getElementById("campo-stock").value = producto.stock || 0;
+        document.getElementById("campo-imagen").value = producto.imagen || "";
         if (producto.controlInventario) {
             document.getElementById("grupo-stock").classList.remove("oculto");
         } else {
@@ -122,6 +129,7 @@ async function guardarProducto() {
     var costoTexto = document.getElementById("campo-costo").value;
     var controlInventario = document.getElementById("campo-inventario").value == "si";
     var stockTexto = document.getElementById("campo-stock").value;
+    var imagen = document.getElementById("campo-imagen").value.trim();
 
     var precio = parseFloat(precioTexto);
     var costo = parseFloat(costoTexto);
@@ -170,7 +178,8 @@ async function guardarProducto() {
                 costo: costo,
                 controlInventario: controlInventario,
                 stock: controlInventario ? stock : null,
-                codigo: generarCodigoProducto()
+                codigo: generarCodigoProducto(),
+                imagen: imagen
             };
             await guardarProductoEnAPI(productoNuevo);
             listaProductos.push(productoNuevo);
@@ -187,6 +196,7 @@ async function guardarProducto() {
                     listaProductos[j].costo = costo;
                     listaProductos[j].controlInventario = controlInventario;
                     listaProductos[j].stock = controlInventario ? stock : null;
+                    listaProductos[j].imagen = imagen;
                     await guardarProductoEnAPI(listaProductos[j]);
                     break;
                 }
@@ -237,4 +247,18 @@ function ejecutarEliminacion() {
     cerrarModalEliminar();
     cargarTablaProductos();
     mostrarNotificacion("Producto eliminado de la vista");
+}
+
+
+// Muestra una miniatura de la imagen mientras el usuario escribe la URL
+function previsualizarImagen() {
+    var url = document.getElementById("campo-imagen").value.trim();
+    var preview = document.getElementById("preview-imagen");
+    if (url == "") {
+        preview.innerHTML = "";
+        return;
+    }
+    preview.innerHTML =
+        '<img src="' + url + '" style="height:80px;border-radius:6px;border:1px solid #e0d8cc;object-fit:cover;" ' +
+        'onerror="this.parentElement.innerHTML='<span style=\'color:#c0392b;font-size:12px\'>URL de imagen no válida</span>'">';
 }
