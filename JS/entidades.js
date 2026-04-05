@@ -285,3 +285,80 @@ function cerrarModalEliminar() {
     idProductoAEliminar = null;
     entidadAEliminar = null;
 }
+
+
+// =============================================
+// BUSQUEDA EN ENTIDADES
+// Filtra la tabla en tiempo real segun lo que
+// el usuario escribe en el input de busqueda.
+// =============================================
+
+function buscarEnClientes() {
+    var texto = document.getElementById("buscador-clientes").value.trim().toLowerCase();
+    var filas = document.getElementById("filas-clientes").querySelectorAll("tr");
+    var hayResultados = false;
+
+    for (var i = 0; i < filas.length; i++) {
+        var contenido = filas[i].textContent.toLowerCase();
+        if (contenido.includes(texto)) {
+            filas[i].style.display = "";
+            hayResultados = true;
+        } else {
+            filas[i].style.display = "none";
+        }
+    }
+
+    // Muestro mensaje si no hay resultados
+    var sinResultados = document.getElementById("clientes-sin-resultados");
+    if (!hayResultados && texto != "") {
+        sinResultados.classList.remove("oculto");
+    } else {
+        sinResultados.classList.add("oculto");
+    }
+}
+
+function buscarEnProveedores() {
+    var texto = document.getElementById("buscador-proveedores").value.trim().toLowerCase();
+    var filas = document.getElementById("filas-proveedores").querySelectorAll("tr");
+    var hayResultados = false;
+
+    for (var i = 0; i < filas.length; i++) {
+        var contenido = filas[i].textContent.toLowerCase();
+        if (contenido.includes(texto)) {
+            filas[i].style.display = "";
+            hayResultados = true;
+        } else {
+            filas[i].style.display = "none";
+        }
+    }
+
+    var sinResultados = document.getElementById("proveedores-sin-resultados");
+    if (!hayResultados && texto != "") {
+        sinResultados.classList.remove("oculto");
+    } else {
+        sinResultados.classList.add("oculto");
+    }
+}
+
+function buscarEnCategorias() {
+    var texto = document.getElementById("buscador-categorias").value.trim().toLowerCase();
+    var filas = document.getElementById("filas-categorias").querySelectorAll("tr");
+    var hayResultados = false;
+
+    for (var i = 0; i < filas.length; i++) {
+        var contenido = filas[i].textContent.toLowerCase();
+        if (contenido.includes(texto)) {
+            filas[i].style.display = "";
+            hayResultados = true;
+        } else {
+            filas[i].style.display = "none";
+        }
+    }
+
+    var sinResultados = document.getElementById("categorias-sin-resultados");
+    if (!hayResultados && texto != "") {
+        sinResultados.classList.remove("oculto");
+    } else {
+        sinResultados.classList.add("oculto");
+    }
+}
