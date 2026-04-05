@@ -9,7 +9,7 @@
 
 // URL del backend en Google Sheets
 // Cambiar esta URL si se vuelve a publicar el script
-var API_URL = "https://script.google.com/macros/s/AKfycbyNLEzmOKoBzOlRjAuyb-G0OI-y91MXruAtqu574l8Xi8NFjP9ji6_pfvuW_BRbHt54/exec";
+var API_URL = "https://script.google.com/macros/s/AKfycbzUZfEv8ZISwq1sOL_4h1h9zzbG-LwRXot9E9_Wb-sBfvuhZjIzrRfoztaQxOiG19FE/exec";
 
 // ---- VARIABLES GLOBALES ----
 
