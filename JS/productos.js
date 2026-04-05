@@ -258,7 +258,20 @@ function previsualizarImagen() {
         preview.innerHTML = "";
         return;
     }
+    // Muestra una miniatura de la imagen mientras el usuario escribe la URL
+// Muestra una miniatura de la imagen mientras el usuario escribe la URL
+function previsualizarImagen() {
+    var url = document.getElementById("campo-imagen").value.trim();
+    var preview = document.getElementById("preview-imagen");
+    if (!preview) return; // Seguridad por si no existe el div de preview
+
+    if (url == "") {
+        preview.innerHTML = "";
+        return;
+    }
+    
+    // CORRECCIÓN: Usamos comillas dobles en el onerror para no romper el string
     preview.innerHTML =
         '<img src="' + url + '" style="height:80px;border-radius:6px;border:1px solid #e0d8cc;object-fit:cover;" ' +
-        'onerror="this.parentElement.innerHTML='<span style=\'color:#c0392b;font-size:12px\'>URL de imagen no válida</span>'">';
+        'onerror="this.parentElement.innerHTML=\'<span style=\' + \'color:#c0392b;font-size:12px\'>URL de imagen no válida</span>\'">';
 }
