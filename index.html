@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>POS - Papel y Luna MVP 2</title>
-     <link rel="stylesheet" href="CSS/base.css">
-     <link rel="stylesheet" href="CSS/modales.css">
-     <link rel="stylesheet" href="CSS/styles.css">
+    <link rel="stylesheet" href="CSS/base.css">
+    <link rel="stylesheet" href="CSS/modales.css">
+    <link rel="stylesheet" href="CSS/styles.css">
 </head>
 <body>
 
@@ -140,7 +140,7 @@
         <div id="productos-vacio" class="estado-vacio oculto"><p>📦</p><p>No hay productos en el catálogo.</p></div>
         <table id="tabla-productos" class="oculto">
             <thead>
-                <tr><th>ID</th><th>Nombre</th><th>Categoría</th><th>Precio</th><th>Costo</th><th>Stock</th><th>Acciones</th></tr>
+                <tr><th>Imagen</th><th>Nombre</th><th>Categoría</th><th>Precio</th><th>Costo</th><th>Stock</th><th>Acciones</th></tr>
             </thead>
             <tbody id="filas-productos"></tbody>
         </table>
@@ -325,6 +325,11 @@
                 <div class="grupo-campo" id="grupo-stock">
                     <label class="etiqueta-campo">Stock disponible</label>
                     <input type="number" id="campo-stock" class="campo-input" placeholder="0" min="0">
+                </div>
+                <div class="grupo-campo" style="grid-column: 1 / -1">
+                    <label class="etiqueta-campo">URL de imagen (opcional)</label>
+                    <input type="text" id="campo-imagen" class="campo-input" placeholder="https://ejemplo.com/imagen.jpg" oninput="previsualizarImagen()">
+                    <div id="preview-imagen" style="margin-top:8px"></div>
                 </div>
             </div>
             <div id="errores-formulario" class="oculto"></div>
