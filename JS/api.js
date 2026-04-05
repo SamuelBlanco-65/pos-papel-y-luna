@@ -37,7 +37,8 @@ async function cargarProductosDesdeAPI() {
                 costo: Number(fila.costo),
                 stock: fila.stock !== "" ? Number(fila.stock) : null,
                 controlInventario: String(fila.seguimientoInventario) == "si",
-                codigo: String(fila.id)
+                codigo: String(fila.id),
+                imagen: String(fila.imagen || "")
             });
         }
     } catch (error) {
@@ -160,7 +161,8 @@ async function guardarProductoEnAPI(producto) {
         precio: producto.precio,
         costo: producto.costo,
         stock: producto.stock !== null ? producto.stock : "",
-        seguimientoInventario: producto.controlInventario ? "si" : "no"
+        seguimientoInventario: producto.controlInventario ? "si" : "no",
+        imagen: producto.imagen || ""
     });
 }
 
