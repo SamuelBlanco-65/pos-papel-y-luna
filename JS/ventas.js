@@ -171,11 +171,29 @@ function actualizarVistaCarrito() {
     for (var i = 0; i < items.length; i++) {
         var item = items[i];
         var subtotal = item.precio * item.cantidad;
+
+        // Busco la imagen del producto en el catalogo
+        var imagenProducto = "";
+        for (var p = 0; p < listaProductos.length; p++) {
+            if (listaProductos[p].id == item.idProducto) {
+                imagenProducto = listaProductos[p].imagen || "";
+                break;
+            }
+        }
+        var imgCarritoHtml = imagenProducto != ""
+            ? '<img src="' + imagenProducto + '" class="img-carrito" onerror="this.style.display=\'none\'">'
+            : '<div class="img-carrito-placeholder">📦</div>';
+
         filasHTML +=
             '<tr>' +
                 '<td>' +
-                    '<div style="font-weight:500">' + item.nombre + '</div>' +
-                    '<div class="texto-mono" style="color:#9a9087;margin-top:2px">' + item.idProducto + '</div>' +
+                    '<div style="display:flex;align-items:center;gap:10px">' +
+                        imgCarritoHtml +
+                        '<div>' +
+                            '<div style="font-weight:500">' + item.nombre + '</div>' +
+                            '<div class="texto-mono" style="color:#9a9087;margin-top:2px">' + item.idProducto + '</div>' +
+                        '</div>' +
+                    '</div>' +
                 '</td>' +
                 '<td>' +
                     '<div class="control-cantidad">' +
