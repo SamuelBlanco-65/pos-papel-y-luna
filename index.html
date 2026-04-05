@@ -198,7 +198,11 @@
             <h1>Clientes</h1>
             <button class="btn-principal" onclick="abrirFormularioEntidad('cliente', 'nuevo')">+ Nuevo Cliente</button>
         </div>
+        <div class="barra-busqueda-entidad">
+            <input type="text" id="buscador-clientes" class="input-buscador-entidad" placeholder="Buscar cliente por nombre, teléfono o correo..." onkeyup="buscarEnClientes()">
+        </div>
         <div id="clientes-vacio" class="estado-vacio oculto"><p>👥</p><p>No hay clientes registrados.</p></div>
+        <p id="clientes-sin-resultados" class="sin-resultados-entidad oculto">No se encontraron clientes con ese criterio.</p>
         <table id="tabla-clientes" class="oculto">
             <thead><tr><th>Nombre</th><th>Teléfono</th><th>Correo</th><th>Acciones</th></tr></thead>
             <tbody id="filas-clientes"></tbody>
@@ -211,7 +215,11 @@
             <h1>Proveedores</h1>
             <button class="btn-principal" onclick="abrirFormularioEntidad('proveedor', 'nuevo')">+ Nuevo Proveedor</button>
         </div>
+        <div class="barra-busqueda-entidad">
+            <input type="text" id="buscador-proveedores" class="input-buscador-entidad" placeholder="Buscar proveedor por nombre, teléfono o correo..." onkeyup="buscarEnProveedores()">
+        </div>
         <div id="proveedores-vacio" class="estado-vacio oculto"><p>🏭</p><p>No hay proveedores registrados.</p></div>
+        <p id="proveedores-sin-resultados" class="sin-resultados-entidad oculto">No se encontraron proveedores con ese criterio.</p>
         <table id="tabla-proveedores" class="oculto">
             <thead><tr><th>Nombre</th><th>Teléfono</th><th>Correo</th><th>Acciones</th></tr></thead>
             <tbody id="filas-proveedores"></tbody>
@@ -224,7 +232,11 @@
             <h1>Categorías</h1>
             <button class="btn-principal" onclick="abrirFormularioEntidad('categoria', 'nuevo')">+ Nueva Categoría</button>
         </div>
+        <div class="barra-busqueda-entidad">
+            <input type="text" id="buscador-categorias" class="input-buscador-entidad" placeholder="Buscar categoría por nombre..." onkeyup="buscarEnCategorias()">
+        </div>
         <div id="categorias-vacio" class="estado-vacio oculto"><p>🏷</p><p>No hay categorías registradas.</p></div>
+        <p id="categorias-sin-resultados" class="sin-resultados-entidad oculto">No se encontraron categorías con ese criterio.</p>
         <table id="tabla-categorias" class="oculto">
             <thead><tr><th>Nombre</th><th>Acciones</th></tr></thead>
             <tbody id="filas-categorias"></tbody>
@@ -326,14 +338,10 @@
                     <label class="etiqueta-campo">Stock disponible</label>
                     <input type="number" id="campo-stock" class="campo-input" placeholder="0" min="0">
                 </div>
-                
                 <div class="grupo-campo" style="grid-column: 1 / -1">
                     <label class="etiqueta-campo">URL de imagen (opcional)</label>
                     <input type="text" id="campo-imagen" class="campo-input" placeholder="https://ejemplo.com/imagen.jpg" oninput="previsualizarImagen()">
-                    
-                    <div id="preview-imagen" style="margin-top:10px; min-height:80px; border: 2px dashed #e0d8cc; border-radius: 8px; display: flex; align-items: center; justify-content: center; background-color: #fdfbf9;">
-                        <span style="color: #9a9087; font-size: 12px;">Vista previa de imagen</span>
-                    </div>
+                    <div id="preview-imagen" style="margin-top:8px"></div>
                 </div>
             </div>
             <div id="errores-formulario" class="oculto"></div>
