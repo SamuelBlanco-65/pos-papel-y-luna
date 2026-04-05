@@ -68,15 +68,42 @@
     z-index: 50; max-height: 260px; overflow-y: auto;
 }
 .item-resultado {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 10px 14px; cursor: pointer; border-bottom: 1px solid var(--color-borde);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--color-borde);
 }
 .item-resultado:last-child { border-bottom: none; }
 .item-resultado:hover { background-color: var(--color-fondo-calido); }
+.info-resultado { flex: 1; min-width: 0; }
 .nombre-resultado { font-weight: 500; font-size: 13px; }
 .codigo-resultado { font-size: 11px; color: var(--color-cafe-claro); font-family: monospace; margin-top: 2px; }
-.precio-resultado { font-weight: 600; font-size: 13px; color: var(--color-naranja); }
+.precio-resultado { font-weight: 600; font-size: 13px; color: var(--color-naranja); flex-shrink: 0; }
 .sin-resultados { padding: 14px; text-align: center; color: var(--color-cafe-claro); font-size: 13px; }
+
+/* Imagen en resultados de busqueda */
+.img-resultado {
+    width: 42px;
+    height: 42px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid var(--color-borde);
+    flex-shrink: 0;
+}
+.img-resultado-placeholder {
+    width: 42px;
+    height: 42px;
+    background-color: var(--color-fondo-calido);
+    border: 1px solid var(--color-borde);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+}
 
 /* CARRITO */
 #contenedor-venta {
@@ -196,3 +223,26 @@ tbody tr:hover td { background-color: var(--color-fondo-calido); }
 
 /* COMPRAS - select proveedor */
 .fila-proveedor { margin-bottom: 16px; }
+
+
+/* IMAGENES DE PRODUCTOS */
+.img-producto-tabla {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid var(--color-borde);
+    display: block;
+}
+
+.img-producto-placeholder {
+    width: 48px;
+    height: 48px;
+    background-color: var(--color-fondo-calido);
+    border: 1px solid var(--color-borde);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
