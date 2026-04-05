@@ -1,8 +1,6 @@
 // =============================================
 // PRODUCTOS.JS
 // CRUD de productos integrado con Google Sheets.
-// Cargar, crear y editar usan la API.
-// Eliminar tambien actualiza la lista local.
 // =============================================
 
 // ---- TABLA ----
@@ -31,7 +29,7 @@ function cargarTablaProductos() {
         // Miniatura si el producto tiene imagen
         var imgHtml = prod.imagen && prod.imagen != ""
             ? '<img src="' + prod.imagen + '" class="img-producto-tabla" onerror="this.style.display=\'none\'">'
-            : '<div class="img-producto-placeholder">📦</div>';
+            : '<div class="img-producto-placeholder">\u{1F4E6}</div>';
 
         html +=
             '<tr>' +
@@ -43,8 +41,8 @@ function cargarTablaProductos() {
                 '<td>' + textoStock + '</td>' +
                 '<td>' +
                     '<div style="display:flex;gap:5px">' +
-                        '<button class="btn-tabla" onclick="abrirFormularioProducto(\'' + prod.id + '\')">✎ Editar</button>' +
-                        '<button class="btn-tabla peligro" onclick="abrirModalEliminar(\'' + prod.id + '\')">✕ Eliminar</button>' +
+                        '<button class="btn-tabla" onclick="abrirFormularioProducto(\'' + prod.id + '\')">&#9998; Editar</button>' +
+                        '<button class="btn-tabla peligro" onclick="abrirModalEliminar(\'' + prod.id + '\')">&#10005; Eliminar</button>' +
                     '</div>' +
                 '</td>' +
             '</tr>';
@@ -77,6 +75,7 @@ function abrirFormularioProducto(idONuevo) {
         document.getElementById("campo-inventario").value = "si";
         document.getElementById("campo-stock").value = "0";
         document.getElementById("campo-imagen").value = "";
+        document.getElementById("preview-imagen").innerHTML = "";
         document.getElementById("grupo-stock").classList.remove("oculto");
     } else {
         idProductoEditando = idONuevo;
@@ -99,6 +98,7 @@ function abrirFormularioProducto(idONuevo) {
         document.getElementById("campo-inventario").value = producto.controlInventario ? "si" : "no";
         document.getElementById("campo-stock").value = producto.stock || 0;
         document.getElementById("campo-imagen").value = producto.imagen || "";
+        previsualizarImagen();
         if (producto.controlInventario) {
             document.getElementById("grupo-stock").classList.remove("oculto");
         } else {
@@ -110,6 +110,7 @@ function abrirFormularioProducto(idONuevo) {
 
 function cerrarFormularioProducto() {
     document.getElementById("modal-producto").classList.add("oculto");
+    document.getElementById("preview-imagen").innerHTML = "";
     idProductoEditando = null;
 }
 
@@ -120,6 +121,28 @@ function toggleCampoStock() {
     } else {
         document.getElementById("grupo-stock").classList.add("oculto");
     }
+}
+
+// Muestra una miniatura mientras el usuario escribe la URL
+function previsualizarImagen() {
+    var url = document.getElementById("campo-imagen").value.trim();
+    var preview = document.getElementById("preview-imagen");
+    if (url == "") {
+        preview.innerHTML = "";
+        return;
+    }
+    // Uso createElement para evitar problemas de comillas anidadas
+    var img = document.createElement("img");
+    img.src = url;
+    img.style.height = "80px";
+    img.style.borderRadius = "6px";
+    img.style.border = "1px solid #e0d8cc";
+    img.style.objectFit = "cover";
+    img.onerror = function() {
+        preview.innerHTML = '<span style="color:#c0392b;font-size:12px">URL de imagen no válida</span>';
+    };
+    preview.innerHTML = "";
+    preview.appendChild(img);
 }
 
 async function guardarProducto() {
@@ -169,7 +192,6 @@ async function guardarProducto() {
 
     try {
         if (idProductoEditando == null) {
-            // CREAR: genero ID y envio a la API
             var productoNuevo = {
                 id: generarId("P"),
                 nombre: nombre,
@@ -185,9 +207,6 @@ async function guardarProducto() {
             listaProductos.push(productoNuevo);
             mostrarNotificacion("Producto creado correctamente", "exito");
         } else {
-            // EDITAR: actualizo localmente y envio a la API
-            // Nota: Google Sheets no soporta UPDATE directo, agrego una nueva fila
-            // con los datos actualizados. En una app real se usaria un backend real.
             for (var j = 0; j < listaProductos.length; j++) {
                 if (listaProductos[j].id == idProductoEditando) {
                     listaProductos[j].nombre = nombre;
@@ -236,7 +255,6 @@ function cerrarModalEliminar() {
 
 function ejecutarEliminacion() {
     if (idProductoAEliminar == null) return;
-    // Elimino solo localmente (Sheets no tiene DELETE en este backend)
     var filtrados = [];
     for (var i = 0; i < listaProductos.length; i++) {
         if (listaProductos[i].id != idProductoAEliminar) {
@@ -247,33 +265,4 @@ function ejecutarEliminacion() {
     cerrarModalEliminar();
     cargarTablaProductos();
     mostrarNotificacion("Producto eliminado de la vista");
-}
-
-
-// Muestra una miniatura de la imagen mientras el usuario escribe la URL
-function previsualizarImagen() {
-    var url = document.getElementById("campo-imagen").value.trim();
-    var preview = document.getElementById("preview-imagen");
-    if (url == "") {
-        preview.innerHTML = "";
-        return;
-    }
-    // Muestra una miniatura de la imagen mientras el usuario escribe la URL
-// Muestra una miniatura de la imagen mientras el usuario escribe la URL
-function previsualizarImagen() {
-    var urlInput = document.getElementById("campo-imagen");
-    var preview = document.getElementById("preview-imagen");
-    
-    if (!urlInput || !preview) return; 
-
-    var url = urlInput.value.trim();
-
-    if (url == "") {
-        preview.innerHTML = '<span style="color: #9a9087; font-size: 12px;">Vista previa de imagen</span>';
-        return;
-    }
-
-    // CORRECCIÓN: Usamos comillas dobles para el style y evitamos el choque en onerror
-    preview.innerHTML = '<img src="' + url + '" style="height:80px; border-radius:6px; border:1px solid #e0d8cc; object-fit:cover;" ' +
-        'onerror="this.parentElement.innerHTML=\'<span style=\\\'color:#c0392b;font-size:12px\\\'>URL de imagen no válida</span>\'">';
 }
