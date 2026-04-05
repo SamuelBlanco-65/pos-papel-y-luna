@@ -269,3 +269,161 @@ tbody tr:hover td { background-color: var(--color-fondo-calido); }
     font-size: 18px;
     flex-shrink: 0;
 }
+
+
+/* =============================================
+   BUSCADOR EN ENTIDADES
+   ============================================= */
+
+.barra-busqueda-entidad {
+    margin-bottom: 16px;
+}
+
+.input-buscador-entidad {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--color-borde);
+    border-radius: 8px;
+    font-size: 14px;
+    background-color: var(--color-blanco);
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.input-buscador-entidad:focus {
+    border-color: var(--color-naranja);
+}
+
+.sin-resultados-entidad {
+    text-align: center;
+    padding: 20px;
+    color: var(--color-cafe-claro);
+    font-size: 13px;
+    background-color: var(--color-blanco);
+    border: 1px solid var(--color-borde);
+    border-radius: 8px;
+    margin-bottom: 12px;
+}
+
+
+/* =============================================
+   RESPONSIVE MOVIL
+   ============================================= */
+
+/* TABLET - 768px */
+@media (max-width: 768px) {
+
+    body {
+        flex-direction: column;
+        height: auto;
+        overflow: auto;
+    }
+
+    /* El sidebar se convierte en barra horizontal arriba */
+    #sidebar {
+        width: 100%;
+        min-height: auto;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        padding: 8px;
+        gap: 4px;
+    }
+
+    #logo-sidebar {
+        width: 100%;
+        padding: 10px 12px 8px;
+        margin-bottom: 0;
+        border-bottom: none;
+        border-right: none;
+    }
+
+    #logo-sidebar h2 { font-size: 14px; }
+
+    .seccion-nav { display: none; }
+
+    .boton-nav {
+        width: auto;
+        padding: 7px 12px;
+        font-size: 12px;
+        margin: 2px;
+    }
+
+    #contenido-principal {
+        padding: 16px;
+        overflow-y: auto;
+    }
+
+    /* Carrito en columna en vez de grid */
+    #contenedor-venta {
+        grid-template-columns: 1fr;
+    }
+
+    #panel-totales {
+        order: -1;
+    }
+
+    .encabezado-vista {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+
+    .botones-encabezado {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .botones-encabezado button {
+        flex: 1;
+        text-align: center;
+        min-width: 100px;
+    }
+
+    /* Tablas con scroll horizontal */
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    /* Formulario de compras en columna */
+    .fila-compra {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+}
+
+/* MOVIL - 480px */
+@media (max-width: 480px) {
+
+    #logo-sidebar h2 { font-size: 13px; }
+
+    .boton-nav {
+        font-size: 11px;
+        padding: 6px 10px;
+    }
+
+    #contenido-principal { padding: 12px; }
+
+    .encabezado-vista h1 { font-size: 20px; }
+
+    /* Una sola columna en compras */
+    .fila-compra {
+        grid-template-columns: 1fr;
+    }
+
+    /* Tabla de carrito mas compacta */
+    tbody td { padding: 8px 10px; font-size: 12px; }
+    thead th { padding: 8px 10px; }
+
+    /* Botones de confirmacion apilados */
+    .botones-confirmacion {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .botones-confirmacion button {
+        width: 100%;
+    }
+}
