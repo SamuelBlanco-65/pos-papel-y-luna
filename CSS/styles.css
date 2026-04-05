@@ -427,3 +427,54 @@ tbody tr:hover td { background-color: var(--color-fondo-calido); }
         width: 100%;
     }
 }
+
+
+/* =============================================
+   CONFIRMACION DE COMPRA
+   ============================================= */
+
+.confirmacion-compra-icono {
+    font-size: 48px;
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.confirmacion-compra-detalles {
+    background-color: var(--color-fondo-calido);
+    border: 1px solid var(--color-borde);
+    border-radius: 8px;
+    padding: 14px 16px;
+}
+
+.fila-confirmacion-compra {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    font-size: 13px;
+    border-bottom: 1px solid var(--color-borde);
+}
+
+.fila-confirmacion-compra:last-child {
+    border-bottom: none;
+}
+
+.fila-confirmacion-compra span {
+    color: var(--color-cafe-claro);
+}
+
+.fila-confirmacion-compra strong {
+    color: var(--color-cafe-oscuro);
+    font-weight: 600;
+}
+
+.fila-confirmacion-compra.destacada strong {
+    font-size: 16px;
+    color: var(--color-naranja);
+}
+
+/* Opciones metodo de pago en compras */
+.opciones-metodo-compra {
+    display: flex;
+    gap: 8px;
+}
