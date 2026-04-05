@@ -391,6 +391,12 @@ function cambiarMetodoPago() {
     if (metodo == "efectivo") {
         document.getElementById("seccion-efectivo").classList.remove("oculto");
     } else if (metodo == "debe") {
+        // Poblo el select de clientes registrados
+        var selectDebe = document.getElementById("select-cliente-debe");
+        selectDebe.innerHTML = '<option value="">Selecciona un cliente registrado</option>';
+        for (var i = 0; i < listaClientes.length; i++) {
+            selectDebe.innerHTML += '<option value="' + listaClientes[i].id + '">' + listaClientes[i].nombre + '</option>';
+        }
         document.getElementById("seccion-debe").classList.remove("oculto");
     }
 }
@@ -456,9 +462,22 @@ async function confirmarCobro() {
         }
         ventaActual.pago = { metodo: "efectivo", valorRecibido: recibido, cambio: recibido - total };
     } else if (metodo == "debe") {
-        var nombreCliente = document.getElementById("input-cliente-debe").value.trim();
+        // Si se selecciono un cliente del sistema lo uso, si no exijo el campo de texto
+        var clienteSeleccionado = document.getElementById("select-cliente-cobro").value;
+        var nombreCliente = "";
+        if (clienteSeleccionado != "") {
+            // Busco el nombre del cliente en la lista
+            for (var cx = 0; cx < listaClientes.length; cx++) {
+                if (listaClientes[cx].id == clienteSeleccionado) {
+                    nombreCliente = listaClientes[cx].nombre;
+                    break;
+                }
+            }
+        } else {
+            nombreCliente = document.getElementById("input-cliente-debe").value.trim();
+        }
         if (nombreCliente == "") {
-            mostrarNotificacion("Escribe el nombre del cliente para 'Debe'", "error");
+            mostrarNotificacion("Selecciona o escribe el nombre del cliente para 'Debe'", "error");
             return;
         }
         ventaActual.pago = { metodo: "debe", cliente: nombreCliente };
