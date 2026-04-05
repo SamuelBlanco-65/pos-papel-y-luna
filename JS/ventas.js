@@ -305,9 +305,16 @@ function mostrarResultadosBusqueda(resultados, textoBuscado) {
     for (var i = 0; i < resultados.length; i++) {
         var prod = resultados[i];
         var indexReal = listaProductos.indexOf(prod);
+
+        // Miniatura del producto si tiene imagen
+        var imgHtml = prod.imagen && prod.imagen != ""
+            ? '<img src="' + prod.imagen + '" class="img-resultado" onerror="this.style.display=\'none\'">'
+            : '<div class="img-resultado-placeholder">📦</div>';
+
         html +=
             '<div class="item-resultado" onclick="seleccionarProductoDeBusqueda(' + indexReal + ')">' +
-                '<div>' +
+                imgHtml +
+                '<div class="info-resultado">' +
                     '<div class="nombre-resultado">' + prod.nombre + '</div>' +
                     '<div class="codigo-resultado">' + prod.id + ' · ' + prod.categoria + '</div>' +
                 '</div>' +
