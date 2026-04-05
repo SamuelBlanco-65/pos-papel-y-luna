@@ -183,6 +183,7 @@ async function guardarCompraEnAPI(compra) {
         id: compra.id,
         fecha: compra.fecha,
         proveedorId: compra.proveedorId,
+        metodoPago: compra.metodoPago,
         total: compra.total,
         itemsJson: JSON.stringify(compra.items)
     });
