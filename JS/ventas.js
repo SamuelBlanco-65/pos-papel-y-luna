@@ -254,16 +254,18 @@ function cerrarFormularioProductoEnVenta() {
 async function guardarEdicionProductoEnVenta() {
     var id = document.getElementById("edit-venta-id-oculto").value;
     var nombre = document.getElementById("edit-venta-nombre").value.trim();
-    var precio = parseFloat(document.getElementById("edit-venta-precio").value);
 
-    if (nombre == "") {
-        mostrarNotificacion("El nombre no puede estar vacío", "error");
+    if (nombre == "" || nombre.trim().length < 2) {
+        mostrarNotificacion("El nombre debe tener al menos 2 caracteres", "error");
         return;
     }
-    if (isNaN(precio) || precio < 0) {
-        mostrarNotificacion("El precio no es válido", "error");
+    var precioTextoEdicion = document.getElementById("edit-venta-precio").value;
+    var errorPrecioEdicion = validarPrecioCOP(precioTextoEdicion, "El precio");
+    if (errorPrecioEdicion) {
+        mostrarNotificacion(errorPrecioEdicion, "error");
         return;
     }
+    var precio = parseInt(precioTextoEdicion);
 
     mostrarLoader("Actualizando producto...");
     try {
@@ -406,23 +408,19 @@ function calcularCambio() {
     var campo = document.getElementById("valor-recibido");
     var valorEscrito = campo.value;
 
-    if (valorEscrito.length > 0 && valorEscrito[0] == "0") {
-        campo.value = "";
+    // Valido el valor recibido como pesos colombianos
+    if (valorEscrito.trim() == "") {
         document.getElementById("mostrar-cambio").textContent = formatearPrecio(0);
-        mostrarNotificacion("Ingresa un valor de pago válido", "error");
         return;
     }
 
-    var recibido = parseFloat(valorEscrito);
-    if (recibido < 0) {
-        campo.value = "";
-        mostrarNotificacion("El valor recibido no puede ser negativo", "error");
-        return;
-    }
-    if (isNaN(recibido)) {
+    var errorRecibido = validarPrecioCOP(valorEscrito, "El valor recibido");
+    if (errorRecibido) {
         document.getElementById("mostrar-cambio").textContent = formatearPrecio(0);
         return;
     }
+
+    var recibido = parseInt(valorEscrito);
 
     var cambio = recibido - total;
     if (cambio < 0) {
@@ -455,9 +453,15 @@ async function confirmarCobro() {
     }
 
     if (metodo == "efectivo") {
-        var recibido = parseFloat(document.getElementById("valor-recibido").value);
-        if (isNaN(recibido) || recibido < total) {
-            mostrarNotificacion("El valor recibido es menor al total", "error");
+        var valorRecibidoTexto = document.getElementById("valor-recibido").value;
+        var errorRecibidoCobro = validarPrecioCOP(valorRecibidoTexto, "El valor recibido");
+        if (errorRecibidoCobro) {
+            mostrarNotificacion(errorRecibidoCobro, "error");
+            return;
+        }
+        var recibido = parseInt(valorRecibidoTexto);
+        if (recibido < total) {
+            mostrarNotificacion("El valor recibido (" + formatearPrecio(recibido) + ") es menor al total a cobrar (" + formatearPrecio(total) + ")", "error");
             return;
         }
         ventaActual.pago = { metodo: "efectivo", valorRecibido: recibido, cambio: recibido - total };
