@@ -154,29 +154,40 @@ async function guardarProducto() {
     var stockTexto = document.getElementById("campo-stock").value;
     var imagen = document.getElementById("campo-imagen").value.trim();
 
-    var precio = parseFloat(precioTexto);
-    var costo = parseFloat(costoTexto);
+    var precio = parseInt(precioTexto);
+    var costo = parseInt(costoTexto);
     var stock = parseInt(stockTexto);
 
     var errores = [];
-    if (nombre == "") errores.push("El nombre del producto es obligatorio.");
+
+    // Nombre: obligatorio, minimo 2 caracteres
+    if (nombre == "") {
+        errores.push("El nombre del producto es obligatorio.");
+    } else if (nombre.length < 2) {
+        errores.push("El nombre debe tener al menos 2 caracteres.");
+    }
+
     if (categoria == "") errores.push("La categoría es obligatoria.");
-    if (precioTexto.length > 0 && precioTexto[0] == "0") {
-        errores.push("El precio no puede empezar con cero.");
-    } else if (isNaN(precio) || precio < 0) {
-        errores.push("El precio debe ser un número mayor o igual a cero.");
+
+    // Precio en pesos colombianos: entero, multiplo de 50, mayor a 0
+    var errorPrecio = validarPrecioCOP(precioTexto, "El precio");
+    if (errorPrecio) errores.push(errorPrecio);
+
+    // Costo en pesos colombianos: entero, multiplo de 50, mayor a 0
+    var errorCosto = validarPrecioCOP(costoTexto, "El costo");
+    if (errorCosto) errores.push(errorCosto);
+
+    // El costo no puede superar el precio de venta
+    var precioNum = parseInt(precioTexto);
+    var costoNum = parseInt(costoTexto);
+    if (!isNaN(precioNum) && !isNaN(costoNum) && costoNum > precioNum && precioNum > 0) {
+        errores.push("El costo de compra no puede ser mayor al precio de venta.");
     }
-    if (costoTexto.length > 0 && costoTexto[0] == "0") {
-        errores.push("El costo no puede empezar con cero.");
-    } else if (isNaN(costo) || costo < 0) {
-        errores.push("El costo debe ser un número mayor o igual a cero.");
-    }
+
+    // Stock: entero positivo, sin cero inicial
     if (controlInventario) {
-        if (stockTexto.length > 0 && stockTexto[0] == "0" && stockTexto != "0") {
-            errores.push("El stock no puede empezar con cero.");
-        } else if (isNaN(stock) || stock < 0) {
-            errores.push("El stock debe ser un número mayor o igual a cero.");
-        }
+        var errorStock = validarCantidadEntera(stockTexto, "El stock");
+        if (errorStock) errores.push(errorStock);
     }
 
     if (errores.length > 0) {
@@ -196,8 +207,8 @@ async function guardarProducto() {
                 id: generarId("P"),
                 nombre: nombre,
                 categoria: categoria,
-                precio: precio,
-                costo: costo,
+                precio: parseInt(precioTexto),
+                costo: parseInt(costoTexto),
                 controlInventario: controlInventario,
                 stock: controlInventario ? stock : null,
                 codigo: generarCodigoProducto(),
