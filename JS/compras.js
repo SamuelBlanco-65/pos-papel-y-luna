@@ -33,18 +33,26 @@ function abrirVistaCompras() {
 function agregarItemCompra() {
     var idProducto = document.getElementById("select-producto-compra").value;
     var cantidad = parseInt(document.getElementById("cantidad-compra").value);
-    var costo = parseFloat(document.getElementById("costo-compra").value);
+    var costo = parseInt(document.getElementById("costo-compra").value);
 
     if (!idProducto) {
         mostrarNotificacion("Selecciona un producto", "error");
         return;
     }
-    if (isNaN(cantidad) || cantidad <= 0) {
-        mostrarNotificacion("La cantidad debe ser mayor a cero", "error");
+
+    // Validar cantidad: entero positivo, sin decimales, sin cero inicial
+    var cantidadTexto = document.getElementById("cantidad-compra").value;
+    var errorCantidad = validarCantidadEntera(cantidadTexto, "La cantidad");
+    if (errorCantidad) {
+        mostrarNotificacion(errorCantidad, "error");
         return;
     }
-    if (isNaN(costo) || costo < 0) {
-        mostrarNotificacion("El costo debe ser un número válido", "error");
+
+    // Validar costo: pesos colombianos (entero, multiplo de 50, mayor a 0)
+    var costoTexto = document.getElementById("costo-compra").value;
+    var errorCosto = validarPrecioCOP(costoTexto, "El costo");
+    if (errorCosto) {
+        mostrarNotificacion(errorCosto, "error");
         return;
     }
 
