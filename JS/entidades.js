@@ -159,14 +159,35 @@ function cerrarFormularioEntidad() {
 
 async function guardarEntidad() {
     var nombre = document.getElementById("campo-entidad-nombre").value.trim();
+    var tipo = entidadEditando.tipo;
+    var telefono = document.getElementById("campo-entidad-telefono").value.trim();
+    var correo = document.getElementById("campo-entidad-correo").value.trim();
+
+    // Validaciones
     if (nombre == "") {
         mostrarNotificacion("El nombre es obligatorio", "error");
         return;
     }
+    if (nombre.length < 2) {
+        mostrarNotificacion("El nombre debe tener al menos 2 caracteres", "error");
+        return;
+    }
 
-    var tipo = entidadEditando.tipo;
-    var telefono = document.getElementById("campo-entidad-telefono").value.trim();
-    var correo = document.getElementById("campo-entidad-correo").value.trim();
+    // Validar telefono usando la funcion robusta de datos.js
+    if (tipo == "cliente" || tipo == "proveedor") {
+        var errorTel = validarTelefono(telefono);
+        if (errorTel) {
+            mostrarNotificacion(errorTel, "error");
+            return;
+        }
+
+        // Validar correo usando la funcion robusta de datos.js (RFC 5321)
+        var errorCorreo = validarCorreo(correo);
+        if (errorCorreo) {
+            mostrarNotificacion(errorCorreo, "error");
+            return;
+        }
+    }
 
     mostrarLoader("Guardando...");
     try {
