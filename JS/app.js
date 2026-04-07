@@ -1,9 +1,3 @@
-// =============================================
-// APP.JS
-// Arranque del sistema MVP 2.
-// Carga todos los datos desde Google Sheets
-// antes de mostrar la interfaz.
-// =============================================
 
 window.onload = async function () {
 
