@@ -1,9 +1,3 @@
-// =============================================
-// VENTAS.JS
-// Flujo de ventas con soporte para ventas abiertas.
-// Ahora las ventas se envian a Google Sheets via POST.
-// =============================================
-
 
 // ---- CARRITO ----
 
