@@ -1,7 +1,3 @@
-// =============================================
-// PRODUCTOS.JS
-// CRUD de productos integrado con Google Sheets.
-// =============================================
 
 // ---- TABLA ----
 
