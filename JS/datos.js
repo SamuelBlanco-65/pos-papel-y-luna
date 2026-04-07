@@ -1,14 +1,5 @@
-// =============================================
-// DATOS.JS
-// Variables globales del sistema.
-// En el MVP 2 ya no usamos localStorage para
-// productos ni ventas — todo viene de Google Sheets.
-// Solo guardamos en localStorage cosas temporales
-// como la venta que está abierta en este momento.
-// =============================================
 
 // URL del backend en Google Sheets
-// Cambiar esta URL si se vuelve a publicar el script
 var API_URL = "https://script.google.com/macros/s/AKfycbyU7xHDfKRMALsQ_6xqQv9he2uk3GkW4v3rJ3LgEiHeiOPGxD5I-uwiWCGc8sCRAYp7/exec";
 
 // ---- VARIABLES GLOBALES ----
