@@ -1,8 +1,3 @@
-// =============================================
-// COMPRAS.JS
-// Modulo para registrar y consultar compras.
-// =============================================
-
 var itemsCompraActual = [];
 var listaCompras = [];
 
