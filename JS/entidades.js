@@ -1,14 +1,5 @@
-// =============================================
-// ENTIDADES.JS
-// CRUD de Clientes, Proveedores y Categorias.
-// Todos siguen el mismo patron:
-// cargar tabla → abrir formulario → guardar → eliminar
-// =============================================
 
-
-// =============================================
 // CLIENTES
-// =============================================
 
 function cargarTablaClientes() {
     var vacio = document.getElementById("clientes-vacio");
@@ -114,10 +105,7 @@ function cargarTablaCategorias() {
     filas.innerHTML = html;
 }
 
-
-// =============================================
-// FORMULARIO GENERICO DE ENTIDADES
-// =============================================
+// FORMULARIO DE ENTIDADES
 
 function abrirFormularioEntidad(tipo, idONuevo) {
     entidadEditando = { tipo: tipo, id: idONuevo == "nuevo" ? null : idONuevo };
@@ -307,12 +295,7 @@ function cerrarModalEliminar() {
     entidadAEliminar = null;
 }
 
-
-// =============================================
 // BUSQUEDA EN ENTIDADES
-// Filtra la tabla en tiempo real segun lo que
-// el usuario escribe en el input de busqueda.
-// =============================================
 
 function buscarEnClientes() {
     var texto = document.getElementById("buscador-clientes").value.trim().toLowerCase();
