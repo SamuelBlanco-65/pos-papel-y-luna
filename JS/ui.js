@@ -1,8 +1,3 @@
-// =============================================
-// UI.JS
-// Navegacion entre vistas y notificaciones.
-// Igual al MVP 1 pero con mas vistas nuevas.
-// =============================================
 
 var timerNotificacion;
 
